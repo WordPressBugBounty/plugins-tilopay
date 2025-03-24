@@ -64,13 +64,16 @@ export const PaymentMethodOptionTilopay = ({ initSdkSettings, sdkInitResponse, s
             ? splitMethod[2]
             : '';
 
+        const isYappyPayment = (splitMethod.length > 1 && splitMethod[1] == '18');
+
         setPaymentData(prevData => ({
             ...prevData,
             tlpy_payment_method: method.id,
             pay_sinpemovil_tilopay: (method.type === "sinpemovil" && sdkInitResponse.environment == 'PROD' && splitMethod[1] == '4') ? true : false,
             tlpy_sinpemovil_number: sinpeMovilNumber,
             tpay_env: sdkInitResponse.environment,
-            tpay_can_make_payment: splitMethod[1] == '1' ? false : true
+            tpay_can_make_payment: splitMethod[1] == '1' ? false : true,
+            tlpy_is_yappy_payment: isYappyPayment
         }));
 
         setSelectedPaymentMethod(method);

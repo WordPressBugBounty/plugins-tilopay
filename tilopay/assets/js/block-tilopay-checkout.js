@@ -3,7 +3,7 @@
  * This file is implemented
  * From Tilopay plugin V 2.0.3
  * more info tilopay.com
- * New Version 3.0.0
+ * New Version 3.0.8
  *
  */
 jQuery(document).ready(function ($) {
@@ -118,19 +118,26 @@ function onchange_select_card() {
   }
 }
 
-async function initSDKTilopay(tilopayConfig, initialize = undefined) {
+async function initSDKTilopay(tilopayConfigBlock, initialize = undefined) {
   document.getElementById("loaderTpay").style.display = "flex";
 
   let payment_method_selected =
-    typeof tilopayConfig.payment_method_selected != "undefined"
-      ? tilopayConfig.payment_method_selected
+    typeof tilopayConfigBlock !== "undefined" && tilopayConfigBlock.payment_method_selected
+      ? tilopayConfigBlock.payment_method_selected
       : "";
+
+  let paymentPage = false;
+  // Is not from checkout page
+  if (typeof initialize === "undefined") {
+    tilopayConfigBlock = tilopayConfig;
+    initialize = await Tilopay.Init(tilopayConfigBlock);
+    paymentPage = true;
+  }
 
   if (initialize.methods.length > 0) {
     let paymentMethods = initialize.methods.length;
     let onlyOneMethod = 0;
     if (paymentMethods > 0) {
-
       //get if sinpe the first
       onlyOneMethod = initialize.methods[0].id.split(":")[1];
 
@@ -143,9 +150,27 @@ async function initSDKTilopay(tilopayConfig, initialize = undefined) {
           document.getElementById('divTpaySinpeMovil').style.display = 'block';
           document.getElementById('divTpayCardForm').style.display = 'none';
         }
+
+        if (paymentPage) {
+          document.getElementById('tlpy_payment_method').style.display = 'none';
+          document.getElementById('methodLabel').style.display = 'none';
+          document.getElementById('tlpy_payment_method').value = initialize.methods[0];
+        }
       } else {
         document.getElementById('tlpy_payment_method').style.display = 'block';
         document.getElementById('methodLabel').style.display = 'block';
+
+        if (paymentPage) {
+          var methodSelect = document.getElementById('tlpy_payment_method');
+          //method
+          initialize.methods.forEach(function (method, index) {
+            var option = document.createElement('option');
+            option.value = method.id;
+            option.text = method.name;
+            option.selected = index == 0;
+            methodSelect.appendChild(option);
+          });
+        }
       }
 
       if (payment_method_selected != "") {
@@ -191,7 +216,7 @@ async function initSDKTilopay(tilopayConfig, initialize = undefined) {
       }
 
       //Check test mode and have suscription
-      if (tilopayConfig.haveSubscription == '1' && initialize.environment !== "PROD") {
+      if (tilopayConfigBlock.haveSubscription == '1' && initialize.environment !== "PROD") {
         document.getElementById('overlaySubscriptions').style.display = "flex";
       } else {
         document.getElementById('overlaySubscriptions').style.display = "none";
@@ -205,7 +230,7 @@ async function initSDKTilopay(tilopayConfig, initialize = undefined) {
     const options = cardsSelect.querySelectorAll("option:not(:first-child)");
     options.forEach(option => option.remove());
 
-    tilopayConfig.haveCard = countCard;
+    tilopayConfigBlock.haveCard = countCard;
     if (countCard > 0) {
       if (payment_method_selected == "" && onlyOneMethod != "4") {
         document.getElementById('selectCard').style.display = 'block';
@@ -227,7 +252,7 @@ async function initSDKTilopay(tilopayConfig, initialize = undefined) {
       //append other card
       const newOption = document.createElement("option");
       newOption.value = "newCard";
-      newOption.text = tilopayConfig.newCardText;
+      newOption.text = tilopayConfigBlock.newCardText;
       document.getElementById("cards").appendChild(newOption);
 
       document.getElementById("tpay_save_card").disabled = false;
@@ -237,7 +262,7 @@ async function initSDKTilopay(tilopayConfig, initialize = undefined) {
       document.getElementById('selectCard').style.display = 'none';
       if (document.getElementById('tpay_env').value === "PROD") {
         document.getElementById('divSaveCard').style.display = 'block';
-        if (tilopayConfig.haveSubscription === '1') {
+        if (tilopayConfigBlock.haveSubscription === '1') {
           document.getElementById("tpay_save_card").checked = true;
           document.getElementById("tpay_save_card").disabled = true;
         }
@@ -248,11 +273,49 @@ async function initSDKTilopay(tilopayConfig, initialize = undefined) {
       document.getElementById('divCardDate').style.display = 'block';
       document.getElementById('divCardCvc').style.display = 'block';
     }
-  } else {
-    //erro
   }
 
   document.getElementById("loaderTpay").style.display = "none";
+}
+
+/**
+ * Updates the display and values of payment method-related elements based on the selected option.
+ * Only from payment page
+ *
+ * @param {HTMLSelectElement} selectObject - The select element containing payment method options.
+ *
+ * The function determines the selected payment method by parsing the value of the selectObject.
+ * Based on the selected method, it adjusts the visibility of elements such as card selection,
+ * SINPE Movil form, and Yappy phone div. It also updates related hidden input values to indicate
+ * the currently selected payment method.
+ */
+function onchange_payment_method(selectObject) {
+  //get sinpemovil
+  let valSelected = selectObject.value;
+  let paymentMethodSelected = valSelected.split(":")[1];
+  document.getElementById('tlpy_is_yappy_payment').value = 0;
+  document.getElementById('pay_sinpemovil_tilopay').value = 0;
+  if (paymentMethodSelected == "4") {
+    document.getElementById('selectCard').style.display = 'none';
+    document.getElementById('pay_sinpemovil_tilopay').value = 1;
+    document.getElementById('divTpaySinpeMovil').style.display = 'block';
+    document.getElementById('divTpayCardForm').style.display = 'none';
+    document.getElementById('yappyPhoneDiv').style.display = 'none';
+  } else if (paymentMethodSelected == "18") {
+    document.getElementById('selectCard').style.display = 'none';
+    document.getElementById('tlpy_is_yappy_payment').value = 1;
+    document.getElementById('yappyPhoneDiv').style.display = 'block';
+    document.getElementById('divTpayCardForm').style.display = 'none';
+  } else {
+    document.getElementById('yappyPhoneDiv').style.display = 'none';
+    document.getElementById('tlpy_is_yappy_payment').value = 0;
+    document.getElementById('pay_sinpemovil_tilopay').value = 0;
+    document.getElementById('divTpaySinpeMovil').style.display = 'none';
+    document.getElementById('divTpayCardForm').style.display = 'block';
+    if (tilopayConfig.haveCard > 0) {
+      document.getElementById('selectCard').style.display = 'block';
+    }
+  }
 }
 
 function showTilopaySpinner() {

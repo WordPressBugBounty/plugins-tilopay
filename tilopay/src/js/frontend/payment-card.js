@@ -237,7 +237,7 @@ export const AddNewCardFormTilopay = ({ paymentData, setPaymentData, checkoutDat
 
                 { cardList.length > 0 &&
                     <div className={ "form-row form-row-wide" } style={ { marginTop: '10px' } }>
-                        <label htmlFor="cards">Tarjetas guardadas</label>
+                        <label htmlFor="cards">{ __("Saved cards", "tilopay")}</label>
                         <select name="cards"
                             id="cards"
                             className={ "select wc-credit-card-form-card-select" }
@@ -245,7 +245,7 @@ export const AddNewCardFormTilopay = ({ paymentData, setPaymentData, checkoutDat
                             style={ { height: 50 } }
                             value={ selectedCard }
                         >
-                            <option value="" desabled={ "true" }>Seleccionar tarjeta</option>
+                            <option value="" desabled={ "true" }>{ __("Select card", "tilopay")}</option>
                             { cardList.map((card, index) => (
                                 <option key={ index } value={ card.id.split(":")[0] } >
                                     { card.name }
@@ -281,7 +281,7 @@ export const AddNewCardFormTilopay = ({ paymentData, setPaymentData, checkoutDat
                                     backgroundSize: "31px 20px"
                                 } }
                             />
-                            <label htmlFor="tlpy_cc_number">Número de Tarjeta</label>
+                            <label htmlFor="tlpy_cc_number">{ __("Card number", "tilopay")}</label>
                         </div>
                     }
 
@@ -302,7 +302,7 @@ export const AddNewCardFormTilopay = ({ paymentData, setPaymentData, checkoutDat
                                     onChange={ expiryDateInputHandler }
                                     onBlur={ expiryDateOnBlurHandler }
                                 />
-                                <label htmlFor="tlpy_cc_expiration_date">Fecha de Expiración</label>
+                                <label htmlFor="tlpy_cc_expiration_date">{ __("Expiry date", "tilopay")}</label>
                             </div>
                         }
 
@@ -333,7 +333,7 @@ export const AddNewCardFormTilopay = ({ paymentData, setPaymentData, checkoutDat
                             onChange={ setChecked }
                             desabled={ checkoutData.have_subscription && checked ? 'disabled' : null }
                         >
-                            Guardar tarjeta
+                            { __('Save card', 'tilopay') }
                         </CheckboxControl>
                     }
                 </div>

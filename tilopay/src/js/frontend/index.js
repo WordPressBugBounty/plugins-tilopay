@@ -16,6 +16,7 @@ import { useDispatch, dispatch, select, useSelect } from '@wordpress/data';
 import { WcNoticeBlock } from './wc-notice-block.js';
 import { SdkHtmlForm } from './sdk-html-form.js';
 import { HandlerPayment } from './handler-payment.js';
+import { PaymentYappyTilopay } from './payment-yappy.js';
 
 const settings = getSetting('tilopay_data', {});
 const { sdk_init_payload, tpay_key } = settings;
@@ -228,6 +229,21 @@ const TilopayComponent = (props) => {
 
 					paymentData.tpay_woo_checkout_nonce = settings.tpay_nonce;
 
+					if (typeof selectedPaymentMethod !== 'undefined' && selectedPaymentMethod.type === 'yappy') {
+						if (paymentData.tlpy_yappy_phone === '') {
+							setPaymentError(__("Please enter a valid phone number", 'tilopay'));
+							return {
+								type: emitResponse.responseTypes.ERROR,
+								data: {
+									error: true,
+									message: __("Please enter a valid phone number", 'tilopay'),
+								},
+							};
+						} else {
+							setPaymentError(undefined);
+						}
+
+					}
 					if (!applePayProcessed && typeof selectedPaymentMethod !== 'undefined' && selectedPaymentMethod.type === 'applepay') {
 
 						const applePayPayload = await applePayIntegrationTilopay(); // Asegúrate de que los datos de Apple Pay estén listos
@@ -481,7 +497,7 @@ const TilopayComponent = (props) => {
 											// No permitido
 											<div className={ "tpayEnvAlert" } style={ { marginTop: '15px' } }>
 												<span id="environment">
-													{ __('No puede pagar suscripciones con SINPE Móvil, por favor pague con una tarjeta de crédito o débito', 'tilopay') }
+													{ __('You cannot pay subscriptions with SINPE Móvil, please pay with a credit or debit card', 'tilopay') }
 												</span>
 											</div>
 										) : (
@@ -502,6 +518,26 @@ const TilopayComponent = (props) => {
 													message={ __('The payment instructions with SINPE Móvil will be shown on the next screen.', 'tilopay') }
 												/>
 											)
+										)
+									) }
+
+									{ selectedPaymentMethod?.type === "yappy" && (
+										have_subscription ? (
+											// No permitido
+											<div className={ "tpayEnvAlert" } style={ { marginTop: '15px' } }>
+												<span id="environment">
+													{ __('You cannot pay subscriptions with YAPPY, please pay with a credit or debit card', 'tilopay') }
+												</span>
+											</div>
+										) : (
+											<PaymentYappyTilopay
+												paymentData={ paymentData }
+												setPaymentData={ setPaymentData }
+												checkoutData={ checkoutData }
+												setPaymentError={ setPaymentError }
+												paymentError={ paymentError }
+												sdkInitResponse={ sdkInitResponse }
+											/>
 										)
 									) }
 

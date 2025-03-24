@@ -22,6 +22,7 @@ class TilopayHelper {
 		$allowed_hosts[] = 'tilopay-staging-kb4ui2z5cq-uc.a.run.app';
 		$allowed_hosts[] = 'securepayment.tilopay.com';
 		$allowed_hosts[] = 'secure.tilopay.com';
+		$allowed_hosts[] = 'staging.tilopay.com';
 
 		return $allowed_hosts;
 	}
@@ -49,7 +50,7 @@ class TilopayHelper {
 		//TilopayConfig::tilopay_show_block_notices('success', $message);
 
 		if (sanitize_text_field(isset($_GET['message_error']))) {
-			$tilopay_getaway_instance->log(__METHOD__ . ':::' . __LINE__ . ', query params:' . print_r($_GET, true), 'info');
+			$tilopay_getaway_instance->log(__METHOD__ . ':::' . __LINE__ . ', message_error query params:' . print_r($_GET, true), 'info');
 			TilopayConfig::tilopay_show_block_notices('error', 'Error: ' . __(sanitize_text_field($_GET['message_error']), 'tilopay'));
 			return;
 		}
@@ -319,6 +320,8 @@ class TilopayHelper {
 					 * The payment was not approved by Tilopay
 					 *
 					 */
+					$tilopay_getaway_instance->log(__METHOD__ . ':::' . __LINE__ . ', else, not approved:' . print_r($_GET, true), 'info');
+
 					$order->add_order_note(__('Order with failed payment', 'tilopay'));
 					if (!empty($request_code_payment)) {
 						$order->add_order_note(__('Code:', 'tilopay') . $request_code_payment);
@@ -389,7 +392,7 @@ class TilopayHelper {
 			}
 		} catch (\Throwable $th) {
 			//throw $th;
-			$this->log(__METHOD__ . ':::' . __LINE__ . 'Throwable message_error:' . $th->getMessage() . ', file:' . $th->getFile() . ', line:' . $th->getLine(), 'error');
+			$this->log(__METHOD__ . ':::' . __LINE__ . 'Throwable message error:' . $th->getMessage() . ', file:' . $th->getFile() . ', line:' . $th->getLine(), 'error');
 		}
 	}
 

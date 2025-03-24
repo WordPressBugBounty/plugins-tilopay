@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilopay\n"
 "POT-Creation-Date: 2021-11-04 17:56+0000\n"
-"PO-Revision-Date: 2024-10-24 12:10-0600\n"
+"PO-Revision-Date: 2025-01-22 11:07-0600\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_CR\n"
@@ -504,3 +504,15 @@ msgstr "Guía para configurar WooCommerce."
 
 msgid "Docs"
 msgstr "Docs"
+
+msgid "You cannot pay subscriptions with SINPE Móvil, please pay with a credit or debit card"
+msgstr "No puede pagar suscripciones con SINPE Móvil, por favor pague con una tarjeta de crédito o débito"
+
+msgid "You cannot pay subscriptions with YAPPY, please pay with a credit or debit card"
+msgstr "No puede pagar suscripciones con YAPPY, por favor pague con una tarjeta de crédito o débito"
+
+msgid "Please enter a valid phone number"
+msgstr "Por favor, introduzca un número de teléfono válido"
+
+msgid "Yappy phone number"
+msgstr "Número de teléfono de Yappy"

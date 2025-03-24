@@ -139,10 +139,7 @@ class WCTilopay extends \WC_Payment_Gateway {
 
 		add_action('wp_enqueue_scripts', array($this, 'tpay_css_front'), 9998);
 	}
-	function ddddd() {
-		var_dump(22, wcs_get_subscription(387));
-		//exit;
-	}
+
 	function tpay_url_for_invalide_hash_confirmation($order, $computed_hash_hmac_tilopay_server, $customer_computed_hash_hmac, $wc_order_id) {
 
 		// translators: %s the order number.
@@ -237,8 +234,16 @@ class WCTilopay extends \WC_Payment_Gateway {
 			'email' => $email
 		];
 
+		$log_params = $params;
+		if (isset($params['api_user'])) {
+			$log_params['api_user'] = '***';
+		}
+
 		//computed customer hash_hmac
-		return hash_hmac('sha256', http_build_query($params), $hashKey);
+		$own_hash = hash_hmac('sha256', http_build_query($params), $hashKey);
+		$this->log(__METHOD__ . ':::' . ' own_hash:' . $own_hash . ', params:' . print_r($log_params, true), 'info');
+		//computed customer hash
+		return $own_hash;
 	}
 	/**
 	 * Notify of issues in wp-admin
@@ -789,6 +794,7 @@ class WCTilopay extends \WC_Payment_Gateway {
 		<input type="hidden" id="token_hash_code_tilopay" name="token_hash_code_tilopay" value="">
 		<input type="hidden" id="card_type_tilopay" name="card_type_tilopay" value="">
 		<input type="hidden" id="pay_sinpemovil_tilopay" name="pay_sinpemovil_tilopay" value="0">
+		<input type="hidden" id="tlpy_is_yappy_payment" name="tlpy_is_yappy_payment" value="0">
 		<input type="hidden" id="woo_session_tilopay" name="woo_session_tilopay" value="0">
 		<div id="loaderTpay" payFormTilopay>
 		 <div class="spinnerTypayInit"></div>
@@ -812,6 +818,10 @@ class WCTilopay extends \WC_Payment_Gateway {
 		<select name="cards" id="cards" onchange="onchange_select_card( );" >
 			 <option value="" selected disabled>' . esc_html__('Select card', 'tilopay') . '</option>
 		</select>
+		</div>
+		<div class="form-row form-row-wide" id="yappyPhoneDiv" style="display: none;">
+		<label>' . esc_html__('Yappy phone number', 'tilopay') . '</label>
+		<input id="tlpy_yappy_phone" class="input-text wc-credit-card-form-phone" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" placeholder="•••• ••••" name="tlpy_yappy_phone">
 		</div>';
 
 		// Add this action hook if you want your custom payment gateway to support it
@@ -953,10 +963,14 @@ class WCTilopay extends \WC_Payment_Gateway {
 			$payWithSinpeMovil = (isset($_POST['pay_sinpemovil_tilopay']) && '1' == $_POST['pay_sinpemovil_tilopay']) ? true : false;
 			$processApplePay = sanitize_text_field(isset($_POST['process_with_apple_pay'])) ? sanitize_text_field($_POST['process_with_apple_pay']) : 0;
 
+			$tlpy_is_yappy_payment = sanitize_text_field(isset($_POST['tlpy_is_yappy_payment'])) ? sanitize_text_field($_POST['tlpy_is_yappy_payment']) : 0;
+
 			//Check if have suscription at cart
 			$is_subscription = $this->tpay_check_have_subscription();
+			$paymet_with_card = ($payWithSinpeMovil) ? false : true;
 
-			if ($payWithSinpeMovil && $is_subscription) {
+			if (($payWithSinpeMovil || $tlpy_is_yappy_payment) && $is_subscription) {
+				$paymet_with_card = ($tlpy_is_yappy_payment) ? false : true;
 				# mus select credicard payment
 				TilopayConfig::tilopay_show_block_notices('error', __('You cannot pay subscriptions with SINPE Movíl, please pay with a credit or debit card', 'tilopay'));
 				return false;
@@ -971,7 +985,7 @@ class WCTilopay extends \WC_Payment_Gateway {
 			}
 
 			//if not SINPE need to validate card form
-			if (!$payWithSinpeMovil && 0 == $processApplePay) {
+			if ($paymet_with_card && 0 == $processApplePay) {
 				$token_hash_card_tilopay = (sanitize_text_field(isset($_POST['token_hash_card_tilopay'])) && !empty(sanitize_text_field($_POST['token_hash_card_tilopay']))) ? sanitize_text_field($_POST['token_hash_card_tilopay']) : '';
 				$token_hash_code_tilopay = (sanitize_text_field(isset($_POST['token_hash_code_tilopay'])) && !empty(sanitize_text_field($_POST['token_hash_code_tilopay']))) ? sanitize_text_field($_POST['token_hash_code_tilopay']) : '';
 
@@ -1066,6 +1080,8 @@ class WCTilopay extends \WC_Payment_Gateway {
 
 			$processApplePay = sanitize_text_field(isset($_POST['process_with_apple_pay'])) ? sanitize_text_field($_POST['process_with_apple_pay']) : 0;
 
+			$tlpy_is_yappy_payment = sanitize_text_field(isset($_POST['tlpy_is_yappy_payment'])) ? sanitize_text_field($_POST['tlpy_is_yappy_payment']) : 0;
+
 			$this->log(__METHOD__ . ':::' . __LINE__ . ', native payment order_id:' . $order_id, 'info');
 
 			// # Have token
@@ -1080,6 +1096,8 @@ class WCTilopay extends \WC_Payment_Gateway {
 
 			//check if sinpemovil
 			$payWithSinpeMovil = (sanitize_text_field(isset($_POST['pay_sinpemovil_tilopay'])) && 1 == $_POST['pay_sinpemovil_tilopay']) ? true : false;
+
+			$paymet_with_card = ($payWithSinpeMovil) ? false : true;
 
 			if ($payWithSinpeMovil) {
 				# paymen by sinpemovil is checked but payment
@@ -1119,6 +1137,12 @@ class WCTilopay extends \WC_Payment_Gateway {
 				}
 			}
 
+			// Not need for yappy payment
+			if ($tlpy_is_yappy_payment) {
+				$tokenize_new_card = 'off'; // not need tokenize
+				$tokenex_exist = 'off';
+			}
+
 			//cards selected
 			$selectCard = sanitize_text_field(isset($_POST['cards'])) ? sanitize_text_field($_POST['cards']) : 'otra';
 			//2 card is from tilopay, 1 newaone
@@ -1138,7 +1162,7 @@ class WCTilopay extends \WC_Payment_Gateway {
 			//Raw
 			$tlpy_cvv = sanitize_text_field(isset($_POST['tlpy_cvv'])) ? sanitize_text_field($_POST['tlpy_cvv']) : '';
 			// Only prod
-			if ('PROD' == $tpay_env && false === $payWithSinpeMovil && 0 == $processApplePay) {
+			if ('PROD' == $tpay_env && true === $paymet_with_card && 0 == $processApplePay) {
 				//Check card cipher
 				if (1 == $tokenFromTilopay && (ctype_digit(str_replace(' ', '', $get_token_hash_card_tilopay)) || '' == $get_token_hash_card_tilopay)) {
 					// If card or cvv are only number mean encription error
@@ -1151,11 +1175,13 @@ class WCTilopay extends \WC_Payment_Gateway {
 				}
 			}
 
-			//check if type subscriptions and if save card not set set to tokenize on
-			if (1 == $subscription) {
-				$tokenize_new_card = ('otra' == $savedTokenCard && 'on' != $tokenize_new_card) ? 'on' : $tokenize_new_card;
-			} else {
-				$subscription = ('on' == $tokenize_new_card && 'PROD' == $tpay_env) ? 1 : 0;
+			if ($paymet_with_card) {
+				//check if type subscriptions and if save card not set set to tokenize on
+				if (1 == $subscription) {
+					$tokenize_new_card = ('otra' == $savedTokenCard && 'on' != $tokenize_new_card) ? 'on' : $tokenize_new_card;
+				} else {
+					$subscription = ('on' == $tokenize_new_card && 'PROD' == $tpay_env) ? 1 : 0;
+				}
 			}
 
 			if ($this->is_active_HPOS) {
@@ -1209,7 +1235,10 @@ class WCTilopay extends \WC_Payment_Gateway {
 				'returnData' => $this->id,
 				'paymentData' => sanitize_text_field(isset($_POST['payload_apple_pay'])) ? json_decode(sanitize_text_field($_POST['payload_apple_pay']), true) : '',
 				'processApplePay' => $processApplePay,
+				'phoneYappy' => sanitize_text_field(isset($_POST['tlpy_yappy_phone'])) ? json_decode(sanitize_text_field($_POST['tlpy_yappy_phone']), true) : '',
 			];
+
+			//$this->log(__METHOD__ . ':::' . __LINE__ . ', request_data:' . print_r($bodyRequestData, true), 'error');
 
 			$getPaymentResponse = $this->tpay_call_to_make_order_payment($bodyRequestData);
 
@@ -1325,7 +1354,7 @@ class WCTilopay extends \WC_Payment_Gateway {
 				'billToEmail' => $order->get_billing_email(),
 				'orderNumber' => $order_id,
 				'capture' => 'yes' == $this->tpay_capture ? 1 : 0,
-				'subscription' => 0,
+				'subscription' => $this->tpay_check_have_subscription(),
 				'platform' => 'woocommerce-redirect',
 				'lang' => get_bloginfo('language'),
 				'platform_reference' => $this->tpay_platform_detail(),
@@ -1736,8 +1765,8 @@ class WCTilopay extends \WC_Payment_Gateway {
 
 			$response = wp_remote_post(TPAY_ENV_URL . 'loginSdk', $args);
 			if (is_wp_error($response)) {
-				$responseBodyError = isset($response['body']) ? $response['body'] : '';
-				$this->log(__METHOD__ . ':::' . __LINE__ . ', response:' . print_r($responseBodyError, true), 'error');
+				$responseBodyError = $response->get_error_message();
+				$this->log(__METHOD__ . ':::' . __LINE__ . ', response error message: ' . $responseBodyError, 'error');
 				return false;
 			}
 			$result = json_decode($response['body']);
@@ -1838,7 +1867,7 @@ class WCTilopay extends \WC_Payment_Gateway {
 			'orderNumber' => $orderNumber,
 			'capture' => 'yes' == $this->tpay_capture ? 1 : 0,
 			'redirect' => $this->tpay_checkout_redirect,
-			'subscription' => 0,
+			'subscription' => $this->tpay_check_have_subscription(),
 			'platform' => 'woocommerce',
 			'platform_reference' => $this->tpay_platform_detail(),
 			'envMode' => $envMode,

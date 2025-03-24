@@ -13,13 +13,13 @@ use Tilopay\TilopayHelper;
  * Plugin Name: Tilopay
  * Plugin URI: https://wordpress.org/plugins/tilopay/
  * Description: Accept credit and debit cards on your WooCommerce Store
- * Version: 3.0.7
+ * Version: 3.0.8
  * Requires Plugins: woocommerce
  * Author:  Tilopay
  * Author URI: https://tilopay.com
  * WC requires at least: 8.0.0
- * WC tested up to: 9.3.3
- * Tested up to: 6.6.2
+ * WC tested up to: 9.6.0
+ * Tested up to: 6.7.1
  * License: GPLv2
  * Text Domain: tilopay
  * Domain Path: /languages
@@ -30,12 +30,12 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('TPAY_PLUGIN_VERSION', '3.0.7'); //set this same from changelog
+define('TPAY_PLUGIN_VERSION', '3.0.8'); //set this same from changelog
 define('TPAY_PLUGIN_DIR', __DIR__);
 define('TPAY_PLUGIN_BASENAME', plugin_basename(__FILE__));
 define('TPAY_PLUGIN_URL', plugins_url('/', __FILE__));
 define('TPAY_PLUGIN_NAME', plugin_basename(dirname(__FILE__)) . '/tilopay.php');
-define('TPAY_BASE_URL', 'https://app.tilopay.com/'); //
+define('TPAY_BASE_URL', 'https://app.tilopay.com/');
 define('TPAY_ENV_URL', TPAY_BASE_URL . 'api/v1/');
 define('TPAY_SDK_URL', TPAY_BASE_URL . 'sdk/v2/sdk_tpay.min.js');
 define('PLUGIN_ABS_PATH_TPAY', trailingslashit(plugin_dir_path(__FILE__)));

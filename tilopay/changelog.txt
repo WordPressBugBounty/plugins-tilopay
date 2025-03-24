@@ -1,5 +1,11 @@
 *** WooCommerce Extension Template Changelog ***
 
+= 2025-02-05 - version 3.0.8 =
+* Yappy payment method on native
+* Check if subscription to include for redirect options
+* Add screenshots
+* Update description
+* And others changes
 = 2024-11-05 - version 3.0.7 =
 * Include in white list Cardinal url to make payments
 = 2024-10-24 - version 3.0.6 =
