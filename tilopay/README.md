@@ -4,6 +4,41 @@
 
 ---
 
+# 🚀 Guide to Build WooCommerce Block Changes (Tilopay)
+
+Whenever you modify the JavaScript files (`src/js/frontend`) of the **Tilopay** plugin, follow these steps to compile the changes and generate the final package:
+
+---
+
+## Step 1. Navigate to the plugin directory
+```bash
+cd wp-content/plugins/tilopay
+```
+
+## Step 2 – Install Dependencies
+```bash
+npm i && composer i
+```
+
+## Step 3 – Compile the Changes
+
+### Local development (watch mode)
+```bash
+npm run start
+```
+
+### Production build
+```bash
+npm run build
+```
+
+## Step 4 – Package the Plugin
+```bash
+zip -r tilopay.zip tilopay
+```
+
+---
+
 ## Description
 
 With **Tilopay**, your WooCommerce store can accept online payments with credit and debit cards, adapting to the needs of multiple countries and currencies. This plugin is ideal for businesses in **Central America** and the **Caribbean** seeking a modern payment gateway with advanced features like partial refunds, full/partial captures, and **3D Secure** security.

@@ -13,7 +13,7 @@ use Tilopay\TilopayHelper;
  * Plugin Name: Tilopay
  * Plugin URI: https://wordpress.org/plugins/tilopay/
  * Description: Accept credit and debit cards on your WooCommerce Store
- * Version: 3.0.8
+ * Version: 3.0.9
  * Requires Plugins: woocommerce
  * Author:  Tilopay
  * Author URI: https://tilopay.com
@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('TPAY_PLUGIN_VERSION', '3.0.8'); //set this same from changelog
+define('TPAY_PLUGIN_VERSION', '3.0.9'); //set this same from changelog
 define('TPAY_PLUGIN_DIR', __DIR__);
 define('TPAY_PLUGIN_BASENAME', plugin_basename(__FILE__));
 define('TPAY_PLUGIN_URL', plugins_url('/', __FILE__));

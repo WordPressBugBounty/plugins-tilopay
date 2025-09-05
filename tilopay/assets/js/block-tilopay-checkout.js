@@ -3,7 +3,7 @@
  * This file is implemented
  * From Tilopay plugin V 2.0.3
  * more info tilopay.com
- * New Version 3.0.8
+ * New Version 3.0.9
  *
  */
 jQuery(document).ready(function ($) {

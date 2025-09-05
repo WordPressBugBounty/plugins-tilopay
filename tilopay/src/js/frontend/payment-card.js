@@ -81,7 +81,7 @@ export const AddNewCardFormTilopay = ({ paymentData, setPaymentData, checkoutDat
 
                 return (
                     paymentData.tlpy_cc_number != null &&
-                    paymentData.tlpy_cc_number.length >= 16 &&
+                    paymentData.tlpy_cc_number.length >= 15 &&
                     paymentData.tlpy_cc_expiration_date != null &&
                     paymentData.tlpy_cc_expiration_date.length >= 4 &&
                     paymentData.tlpy_cvv != null &&
@@ -98,7 +98,7 @@ export const AddNewCardFormTilopay = ({ paymentData, setPaymentData, checkoutDat
 
                 return (
                     paymentData.tlpy_cc_number != null &&
-                    paymentData.tlpy_cc_number.length >= 16 &&
+                    paymentData.tlpy_cc_number.length >= 15 &&
                     paymentData.tlpy_cc_expiration_date != null &&
                     paymentData.tlpy_cc_expiration_date.length >= 4 &&
                     paymentData.tlpy_cvv != null &&

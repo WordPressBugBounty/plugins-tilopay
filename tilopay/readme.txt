@@ -3,7 +3,7 @@ Contributors: Tilopay
 Tags: eCommerce, e-commerce, woocommerce, central america, caribbean, FAC, BAC, payment, gateway, first atlantic commerce
 Requires at least: 3.9
 Tested up to: 6.7.1
-Stable tag: 3.0.8
+Stable tag: 3.0.9
 Requires PHP: 7.4
 Requires Plugins: woocommerce
 WC requires at least: 8.0.0
@@ -126,6 +126,8 @@ Send your support request to sac@tilopay.com
 8. Preview of the native payment form
 
 == Changelog ==
+= 2025-09-04 - version 3.0.9 =
+* Card length to cipher AMEX >=15 digits
 = 2025-02-05 - version 3.0.8 =
 * Yappy payment method on native
 * Check if subscription to include for redirect options
