@@ -13,13 +13,13 @@ use Tilopay\TilopayHelper;
  * Plugin Name: Tilopay
  * Plugin URI: https://wordpress.org/plugins/tilopay/
  * Description: Accept credit and debit cards on your WooCommerce Store
- * Version: 3.0.9
+ * Version: 3.1.0
  * Requires Plugins: woocommerce
  * Author:  Tilopay
  * Author URI: https://tilopay.com
  * WC requires at least: 8.0.0
- * WC tested up to: 9.6.0
- * Tested up to: 6.7.1
+ * WC tested up to: 10.1.2
+ * Tested up to: 6.8.2
  * License: GPLv2
  * Text Domain: tilopay
  * Domain Path: /languages
@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('TPAY_PLUGIN_VERSION', '3.0.9'); //set this same from changelog
+define('TPAY_PLUGIN_VERSION', '3.1.0'); //set this same from changelog
 define('TPAY_PLUGIN_DIR', __DIR__);
 define('TPAY_PLUGIN_BASENAME', plugin_basename(__FILE__));
 define('TPAY_PLUGIN_URL', plugins_url('/', __FILE__));
@@ -40,14 +40,15 @@ define('TPAY_ENV_URL', TPAY_BASE_URL . 'api/v1/');
 define('TPAY_SDK_URL', TPAY_BASE_URL . 'sdk/v2/sdk_tpay.min.js');
 define('PLUGIN_ABS_PATH_TPAY', trailingslashit(plugin_dir_path(__FILE__)));
 define('PLUGIN_URL_TPAY', untrailingslashit(plugins_url('/', __FILE__)));
+define('TPAY_MAIN_FILE', __FILE__);
 
 if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 	require_once dirname(__FILE__) . '/vendor/autoload.php';
 }
 
 // Ensure WooCommerce is active
-if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-	return;
+if ( !class_exists('WooCommerce') ) {
+    return;
 }
 
 //Woocommerce init

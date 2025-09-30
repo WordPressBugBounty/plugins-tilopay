@@ -3,7 +3,7 @@
         'name' => 'tilopay/tilopay-plugin',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '1d0d5bf9b2389412d8ce61b5e88180c5c420bca8',
+        'reference' => '4b1b8ae21d759fd8cae46326fb9c676e2610a66d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'tilopay/tilopay-plugin' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '1d0d5bf9b2389412d8ce61b5e88180c5c420bca8',
+            'reference' => '4b1b8ae21d759fd8cae46326fb9c676e2610a66d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
