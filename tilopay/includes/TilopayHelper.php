@@ -421,12 +421,12 @@ class TilopayHelper {
 	public static function tilopay_gateway_high_performance_order_storage_support() {
 		// Declaring extension (in)compatibility with WOO HPOS
 		if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', TPAY_MAIN_FILE, true);
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', PLUGIN_ABS_PATH_TPAY . 'tilopay.php', true);
 		}
 		// Check if the required class exists
 		if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
 			// Declare compatibility for 'cart_checkout_blocks'
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('cart_checkout_blocks', TPAY_MAIN_FILE, true);
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('cart_checkout_blocks', PLUGIN_ABS_PATH_TPAY . 'tilopay.php', true);
 		}
 	}
 

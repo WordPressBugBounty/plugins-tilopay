@@ -2,12 +2,12 @@
 Contributors: Tilopay
 Tags: eCommerce, e-commerce, woocommerce, central america, caribbean, FAC, BAC, payment, gateway, first atlantic commerce
 Requires at least: 3.9
-Tested up to: 6.8.2
-Stable tag: 3.1.0
+Tested up to: 6.7.1
+Stable tag: 3.1.1
 Requires PHP: 7.4
 Requires Plugins: woocommerce
 WC requires at least: 8.0.0
-WC tested up to: 10.1.2
+WC tested up to: 9.6.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Woo: true
@@ -126,6 +126,8 @@ Send your support request to sac@tilopay.com
 8. Preview of the native payment form
 
 == Changelog ==
+= 2025-09-04 - version 3.1.2 =
+* Revert changes from 3.1.0
 = 2025-09-17 - version 3.1.0 =
 * Multi-site support
 = 2025-09-04 - version 3.0.9 =

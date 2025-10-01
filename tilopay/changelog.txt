@@ -1,5 +1,7 @@
 *** WooCommerce Extension Template Changelog ***
 
+= 2025-09-04 - version 3.1.1 =
+* Revert changes from 3.1.0
 = 2025-09-17 - version 3.1.0 =
 * Multi-site support
 = 2025-09-04 - version 3.0.9 =
