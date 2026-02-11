@@ -1,6 +1,6 @@
 === Tilopay ===
-Contributors: Tilopay
-Tags: eCommerce, e-commerce, woocommerce, central america, caribbean, FAC, BAC, payment, gateway, first atlantic commerce
+Contributors: hnanne
+Tags: ecommerce, woocommerce, central america, caribbean, payment gateway
 Requires at least: 3.9
 Tested up to: 6.8.2
 Stable tag: 3.1.2
@@ -12,7 +12,7 @@ License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Woo: true
 
-**Tilopay** accepting **credit and debit card payments** on WooCommerce stores. It offers seamless integration, multi-currency support, and advanced tools for secure and efficient payment management.
+Accept payments on WooCommerce stores with seamless integration, multi-currency support, and advanced tools for secure payment processing.
 
 == Description ==
 
